@@ -1,0 +1,10 @@
+# Source photos (large, personal) - kept locally only
+_input/
+
+# Build outputs (attach the world zip to a GitHub Release instead)
+Sturkoskolan.zip
+*.zip
+
+# Python
+__pycache__/
+*.pyc
