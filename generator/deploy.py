@@ -39,10 +39,17 @@ def main():
     sd = os.path.abspath(args.server_dir)
     world = os.path.join(sd, "world")
 
+    import json
+    import zipfile
+    with zipfile.ZipFile(os.path.join(sd, "server.jar")) as jar:
+        ver = json.loads(jar.read("version.json"))
+    version, pack_format = ver["id"], ver["pack_version"]["data_major"]
+    print(f"building for Minecraft {version} (data pack format {pack_format})")
+
     m = make_model()
     if os.path.exists(world):
         shutil.rmtree(world)
-    export(m, os.path.join(world, "datapacks", "sturko"))
+    export(m, os.path.join(world, "datapacks", "sturko"), pack_format=pack_format)
 
     log = open(os.path.join(sd, "server.log"), "w")
     proc = subprocess.Popen(["java", "-Xmx3G", "-jar", "server.jar", "--nogui"], cwd=sd,
@@ -97,7 +104,10 @@ def main():
     d["LevelName"] = nbtlib.String(WORLD_NAME)
     d["allowCommands"] = nbtlib.Byte(1)
     d["GameType"] = nbtlib.Int(1)
-    d["Difficulty"] = nbtlib.Byte(0)
+    if "difficulty_settings" in d:          # 26.x
+        d["difficulty_settings"]["difficulty"] = nbtlib.String("peaceful")
+    else:                                    # 1.21.x
+        d["Difficulty"] = nbtlib.Byte(0)
     if "DataPacks" in d:
         en = d["DataPacks"]["Enabled"]
         d["DataPacks"]["Enabled"] = nbtlib.List[nbtlib.String]([p for p in en if "sturko" not in str(p)])
@@ -119,7 +129,7 @@ def main():
     if os.path.exists(stage):
         shutil.rmtree(stage)
     shutil.copytree(world, stage)
-    out_zip = os.path.join(ROOT, FOLDER)
+    out_zip = os.path.join(ROOT, f"{FOLDER}-{version}")
     shutil.make_archive(out_zip, "zip", sd, FOLDER)
     print("zipped", out_zip + ".zip")
     if args.install:

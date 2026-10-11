@@ -1,13 +1,16 @@
 # Sturköskolan i Minecraft
 
-A Minecraft **Java 1.21.11** world of Sturköskolan (the yellow school + the connected modern
+A Minecraft **Java Edition** world (built natively for 26.3, also 1.21.11) of Sturköskolan (the yellow school + the connected modern
 buildings), built from the photos in `_input/`, the Google aerial and OpenStreetMap footprints.
 Scale: 1 m ≈ 1.2 blocks.
 
 ![The yellow school](renders/hero_yellow_school.png)
 
-* Installed in PrismLauncher → instance **1.21.11** → world **Sturköskolan**.
-* Portable copy: `Sturkoskolan.zip` (unzip into any `.minecraft/saves/`).
+* Download `Sturkoskolan-<version>.zip` and unzip it into your `saves` folder:
+  * Windows: `%APPDATA%\.minecraft\saves`
+  * macOS: `~/Library/Application Support/minecraft/saves`
+  * Linux: `~/.minecraft/saves`
+  (In the launcher: Installations → ⋯ → Edit → the folder icon next to *Game Directory* opens it.)
 * Creative mode, peaceful, cheats on. You spawn on the parking lot looking at the school.
 
 ## Things to find
@@ -25,6 +28,6 @@ Scale: 1 m ≈ 1.2 blocks.
 ```
 nix-shell                                   # python (pillow, numpy, nbtlib) + java 21
 MC_ASSETS=<extracted client jar> python3 generator/build.py --render   # preview images → renders/
-python3 generator/deploy.py <server dir> --install <saves dir>          # real build via a 1.21.11 server
+python3 generator/deploy.py <server dir> [--install <saves dir>]        # real build via a vanilla server (any version)
 ```
 `generator/yellow.py` is the old building, `modern.py` the newer wings, `surroundings.py` the rest.

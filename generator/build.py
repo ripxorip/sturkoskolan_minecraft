@@ -133,7 +133,7 @@ def commands(m):
     return cmds
 
 
-def export(m, out_dir, per_file=8000):
+def export(m, out_dir, per_file=8000, pack_format=94):
     cmds = commands(m)
     fdir = os.path.join(out_dir, "data", "sturko", "function")
     os.makedirs(fdir, exist_ok=True)
@@ -145,8 +145,8 @@ def export(m, out_dir, per_file=8000):
             f.write("\n".join(cmds[i:i + per_file]) + "\n")
         n += 1
     with open(os.path.join(out_dir, "pack.mcmeta"), "w") as f:
-        f.write('{"pack": {"description": "Sturköskolan builder", "pack_format": 94, '
-                '"min_format": [94, 0], "max_format": [94, 1]}}\n')
+        f.write('{"pack": {"description": "Sturköskolan builder", "pack_format": %d, '
+                '"min_format": %d, "max_format": %d}}\n' % (pack_format, pack_format, pack_format))
     print(f"exported {len(cmds)} commands in {n} functions", flush=True)
     return n
 
